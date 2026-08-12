@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pago cancelado – Demo Comercio</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="logo">🛒 Demo Comercio</div>
+    </header>
+
+    <main class="card">
+      <div class="status-icon status-cancel">❌</div>
+      <h1 class="card-title">Pago cancelado</h1>
+      <p class="card-description">Cancelaste el proceso de pago. No se realizó ningún cobro.</p>
+
+      {% if payment_id or subject %}
+      <div class="payment-details">
+        <h2>Detalle del intento</h2>
+        <table class="details-table">
+          <tbody>
+            {% if payment_id %}
+            <tr>
+              <td class="detail-label">ID del pago</td>
+              <td class="detail-value mono">{{ payment_id }}</td>
+            </tr>
+            {% endif %}
+            {% if subject %}
+            <tr>
+              <td class="detail-label">Descripción</td>
+              <td class="detail-value">{{ subject }}</td>
+            </tr>
+            {% endif %}
+            {% if amount %}
+            <tr>
+              <td class="detail-label">Monto</td>
+              <td class="detail-value amount">${{ "{:,.0f}".format(amount) }} CLP</td>
+            </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+      {% endif %}
+
+      <a href="/" class="btn-secondary">← Intentar de nuevo</a>
+    </main>
+
+    <footer class="footer">
+      <p>Integración desarrollada con la <a href="https://docs.khipu.com" target="_blank" rel="noopener">API de Khipu v3</a></p>
+      <p class="env-badge">🧪 Entorno de pruebas – DemoBank</p>
+    </footer>
+  </div>
+</body>
+</html>

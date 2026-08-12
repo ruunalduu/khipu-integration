@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demo Comercio – Pagar con Khipu</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="logo">🛒 Demo Comercio</div>
+      <p class="subtitle">Integración de pagos con Khipu – Entorno de pruebas</p>
+    </header>
+
+    <main class="card">
+      <h1 class="card-title">Realizar un pago</h1>
+      <p class="card-description">
+        Este formulario simula el flujo de pago de un comercio real integrado con Khipu.
+        Usa <strong>DemoBank</strong> para completar el pago en el entorno sandbox.
+      </p>
+
+      {% if error %}
+      <div class="alert alert-error" role="alert">
+        ⚠️ {{ error }}
+      </div>
+      {% endif %}
+
+      <form action="/crear-pago" method="POST" class="payment-form">
+
+        <div class="form-group">
+          <label for="subject">Descripción del pago *</label>
+          <input
+            type="text"
+            id="subject"
+            name="subject"
+            placeholder="Ej: Suscripción mensual Pro"
+            maxlength="200"
+            required
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="amount">
+            Monto (CLP) *
+            <span class="hint">Máximo ${{ "{:,.0f}".format(max_amount) }} en DemoBank</span>
+          </label>
+          <div class="amount-input-wrapper">
+            <span class="currency-prefix">$</span>
+            <input
+              type="number"
+              id="amount"
+              name="amount"
+              placeholder="1000"
+              min="1"
+              max="{{ max_amount }}"
+              step="1"
+              required
+            />
+            <span class="currency-suffix">CLP</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="payer_email">
+            Email del pagador
+            <span class="hint">Opcional – pre-llena el formulario en Khipu</span>
+          </label>
+          <input
+            type="email"
+            id="payer_email"
+            name="payer_email"
+            placeholder="cliente@ejemplo.com"
+            autocomplete="email"
+          />
+        </div>
+
+        <button type="submit" class="btn-pay">
+          <span class="btn-icon">💸</span>
+          Pagar con Khipu
+        </button>
+      </form>
+    </main>
+
+    <footer class="footer">
+      <p>Integración desarrollada con la <a href="https://docs.khipu.com" target="_blank" rel="noopener">API de Khipu v3</a></p>
+      <p class="env-badge">🧪 Entorno de pruebas – DemoBank</p>
+    </footer>
+  </div>
+</body>
+</html>

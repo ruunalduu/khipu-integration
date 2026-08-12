@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pago completado – Demo Comercio</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="logo">🛒 Demo Comercio</div>
+    </header>
+
+    <main class="card">
+      {% if payment %}
+        {% set status = payment.get('status', 'desconocido') %}
+
+        {% if status == 'done' %}
+          <div class="status-icon status-success">✅</div>
+          <h1 class="card-title">¡Pago exitoso!</h1>
+          <p class="card-description">Tu pago fue procesado y conciliado correctamente.</p>
+        {% elif status == 'pending' %}
+          <div class="status-icon status-pending">⏳</div>
+          <h1 class="card-title">Pago en proceso</h1>
+          <p class="card-description">El pago fue iniciado y está siendo procesado. Te notificaremos cuando esté conciliado.</p>
+        {% else %}
+          <div class="status-icon status-info">ℹ️</div>
+          <h1 class="card-title">Pago recibido</h1>
+          <p class="card-description">Tu solicitud de pago fue registrada.</p>
+        {% endif %}
+
+        <div class="payment-details">
+          <h2>Detalle del pago</h2>
+          <table class="details-table">
+            <tbody>
+              {% if payment.get('payment_id') %}
+              <tr>
+                <td class="detail-label">ID del pago</td>
+                <td class="detail-value mono">{{ payment.payment_id }}</td>
+              </tr>
+              {% endif %}
+              {% if payment.get('subject') %}
+              <tr>
+                <td class="detail-label">Descripción</td>
+                <td class="detail-value">{{ payment.subject }}</td>
+              </tr>
+              {% endif %}
+              {% if payment.get('amount') %}
+              <tr>
+                <td class="detail-label">Monto</td>
+                <td class="detail-value amount">
+                  ${{ "{:,.0f}".format(payment.amount) }} {{ payment.get('currency', 'CLP') }}
+                </td>
+              </tr>
+              {% endif %}
+              {% if payment.get('payer_name') %}
+              <tr>
+                <td class="detail-label">Pagador</td>
+                <td class="detail-value">{{ payment.payer_name }}</td>
+              </tr>
+              {% endif %}
+              {% if payment.get('payer_email') %}
+              <tr>
+                <td class="detail-label">Email</td>
+                <td class="detail-value">{{ payment.payer_email }}</td>
+              </tr>
+              {% endif %}
+              <tr>
+                <td class="detail-label">Estado</td>
+                <td class="detail-value">
+                  <span class="status-badge status-{{ status }}">{{ status }}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="status-icon status-info">ℹ️</div>
+        <h1 class="card-title">Redirección recibida</h1>
+        <p class="card-description">No se encontró información del pago en la sesión.</p>
+      {% endif %}
+
+      <a href="/" class="btn-secondary">← Realizar otro pago</a>
+    </main>
+
+    <footer class="footer">
+      <p>Integración desarrollada con la <a href="https://docs.khipu.com" target="_blank" rel="noopener">API de Khipu v3</a></p>
+      <p class="env-badge">🧪 Entorno de pruebas – DemoBank</p>
+    </footer>
+  </div>
+</body>
+</html>
